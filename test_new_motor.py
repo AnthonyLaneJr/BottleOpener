@@ -5,13 +5,11 @@ Hin1 = 17
 Hin2 = 16
 Vin1 = 13
 Vin2 = 12 
-ENA = 5
-ENB = 4  
-
+ENA = 5  #3 ribbons for ENA
+ENB = 4  #3 ribbons for ENB
 trigger = 19   # sends signal
 echo = 20   # reads return
- 
-# careful lowering this, at some point you run into the mechanical limitation of how quick your motor can move
+
 step_sleep = (.005)
  
 step_count = 2000
@@ -64,46 +62,13 @@ def distance():
     
     return distance
 
-# the meat
 def small_run(step_count):
     for i in range(step_count):
         GPIO.output( Hin1, GPIO.HIGH )
-        time.sleep( step_sleep )
-        GPIO.output( Hin1, GPIO.LOW )
-
-def large_run(num = 1, reverse = False):
-    num = int(num)+1
-    if reverse == False:
-            #print('V 1')
-            GPIO.output( Vin2, GPIO.HIGH )
-            time.sleep( step_sleep )
-            GPIO.output( Vin2, GPIO.LOW )
-    elif reverse == True:
-        for i in range (0,num):
-            #print('V 4')
-            GPIO.output( Vin1, GPIO.HIGH )
-            time.sleep( 1 )
-        GPIO.output( Vin1 , GPIO.LOW )
+        print(i)
+    GPIO.output( Hin1, GPIO.LOW )
     
-            
-
-def main_function():
-        dist = distance()
-        start = time.time()
-        while dist > 5.5:
-            large_run()
-            dist = distance() 
-        stop = time.time()
-        verticle_return = stop-start
-        print (f'Bingo : {dist}')
-        small_run(step_count)
-        large_run(verticle_return, reverse = True)
-        print('done')
-        time.sleep(2)  
-
-
-main_function()
-
+        
+        
+small_run(step_count)
 cleanup()
-print('key 2 done')
-exit( 0 )
