@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import time
- 
+
+#GPIO Pin labelling
 Hin1 = 17
 Hin2 = 16
 Vin1 = 13
@@ -11,10 +12,11 @@ ENB = 4
 trigger = 19   # sends signal
 echo = 20   # reads return
  
-# careful lowering this, at some point you run into the mechanical limitation of how quick your motor can move
+# careful lowering this, at some point you run into the mechanical
+# limitation of your motor
 step_sleep = (.005)
  
-step_count = 2000
+step_count = 3000
  
 # setting up
 GPIO.setmode(GPIO.BCM)
@@ -64,21 +66,23 @@ def distance():
     
     return distance
 
-# the meat
+#Control the  horizontal motor motion
 def small_run(step_count):
     for i in range(step_count):
         GPIO.output( Hin1, GPIO.HIGH )
         time.sleep( step_sleep )
         GPIO.output( Hin1, GPIO.LOW )
 
+#Function to control vertical motor motion,
+#Takes in True of False boolean to control direction
 def large_run(num = 1, reverse = False):
     num = int(num)+1
-    if reverse == False:
+    if reverse == True:
             #print('V 1')
             GPIO.output( Vin2, GPIO.HIGH )
             time.sleep( step_sleep )
             GPIO.output( Vin2, GPIO.LOW )
-    elif reverse == True:
+    elif reverse == False:
         for i in range (0,num):
             #print('V 4')
             GPIO.output( Vin1, GPIO.HIGH )
@@ -86,11 +90,13 @@ def large_run(num = 1, reverse = False):
         GPIO.output( Vin1 , GPIO.LOW )
     
             
-
+#Lowers the system until the appropriate
+#height is recorded, then activates opening  motor
+#Finally returns to original height
 def main_function():
         dist = distance()
         start = time.time()
-        while dist > 5.5:
+        while dist > 5:
             large_run()
             dist = distance() 
         stop = time.time()
